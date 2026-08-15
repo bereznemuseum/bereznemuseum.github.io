@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link class="header-logo" rel="icon" type="image" href="assets/images/basic/logo.svg">
+<meta name="theme-color" content="#607c3c">
+<title>Усі об’єкти — Пам’ятки міста Березне</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Той самий спрайт іконок, що й на landmark.html (тільки потрібні) -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-cube" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v9m0 9v-9m0 0L4 7.5M12 12l8-4.5"/></symbol>
+  <symbol id="icon-menu" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+</svg>
+
+<header class="site-header" id="siteHeader">
+  <a href="index.html" class="site-logo">
+    <img src="assets/images/basic/logo.svg" alt="Логотип проєкту" class="site-logo__image">
+    <span>Пам’ятки міста <span class="text-highlight">Березне</span></span>
+  </a>
+</header>
+
+<main>
+  <section class="menu-hero container appear">
+    <h1 class="menu-hero__title">Усі об’єкти</h1>
+    <p class="menu-hero__subtitle">
+      Оберіть пам’ятку, щоб переглянути її цифрову 3D-реконструкцію,
+      історичні фото та розташування на карті міста.
+    </p>
+  </section>
+
+  <!--
+    Картки генеруються автоматично в js/menu.js на основі js/data.js.
+    Щоб додати нову пам'ятку в це меню — жодних правок тут не потрібно,
+    достатньо додати новий запис у data.js.
+  -->
+  <section class="container">
+    <div class="landmark-grid" id="landmarkGrid"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__info footer-column">
+        <p class="site-footer__title">Пам’ятки міста <span class="text-highlight">Березне</span></p>
+        <p class="caption">
+          Проєкт реалізовано в межах ініціативи «Ревіталізація пам'яті: арттерапія через локальну історію» 
+          <a href="https://www.facebook.com/p/%D0%93%D1%80%D0%BE%D0%BC%D0%B0%D0%B4%D1%81%D1%8C%D0%BA%D0%B0-%D0%BE%D1%80%D0%B3%D0%B0%D0%BD%D1%96%D0%B7%D0%B0%D1%86%D1%96%D1%8F-%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D0%BD%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B0-%D0%91%D1%80%D0%B0%D0%BC%D0%B0-100068312231565/" target="_blank" rel="noopener noreferrer">ГО «Березнівська БРАМА»</a> 
+          у партнерстві з 
+          <a href="https://bereznemuseum.org.ua/" target="_blank" rel="noopener noreferrer">Березнівським краєзнавчим музеєм</a> 
+          за підтримки 
+          <a href="https://ucf.in.ua/" target="_blank" rel="noopener noreferrer">Українського культурного фонду</a>.
+        </p>
+        <div class="site-footer__members-grid">
+          <a href="https://ucf.in.ua/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/basic/ucf-logo.svg" alt="Логотип Українського культурного фонду" class="site-footer__member-logo">
+          </a>
+          <a href="https://www.facebook.com/p/%D0%93%D1%80%D0%BE%D0%BC%D0%B0%D0%B4%D1%81%D1%8C%D0%BA%D0%B0-%D0%BE%D1%80%D0%B3%D0%B0%D0%BD%D1%96%D0%B7%D0%B0%D1%86%D1%96%D1%8F-%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D0%BD%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B0-%D0%91%D1%80%D0%B0%D0%BC%D0%B0-100068312231565/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/basic/bereznivska-brama-logo.webp" alt="Логотип ГO Березнівська БРАМА" class="site-footer__member-logo">
+          </a>
+          <a href="https://bereznemuseum.org.ua/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/basic/bereznemuseum-logo.svg" alt="Логотип Березнівського краєзнавчого музею" class="site-footer__member-logo">
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© <span id="copyright-year"></span></p>
+  </div>
+</footer>
+
+<!-- Порядок підключення важливий: data → common → menu -->
+<script src="js/data.js"></script>
+<script src="js/common.js"></script>
+<script src="js/menu.js"></script>
+</body>
+</html>

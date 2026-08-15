@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link class="header-logo" rel="icon" type="image" href="assets/images/basic/logo.svg">
+<meta name="theme-color" content="#607c3c">
+<!--
+  ЦЕ ШАБЛОН СТОРІНКИ ОДНІЄЇ ПАМ'ЯТКИ.
+  Реальний вміст сторінки (назва, опис, фото, 3D-модель) підставляється динамічно
+  через js/landmark.js на основі параметра ?id= в адресному рядку та
+  даних із js/data.js. Сам файл landmark.html НЕ потрібно копіювати чи
+  редагувати під кожен новий об'єкт — див. пояснення в data.js.
+
+  Приклад посилання (саме таке кодується у QR-коді для стенду музею):
+      landmark.html?id=nazva-pamyatky
+-->
+<title>Пам’ятка — Пам’ятки міста Березне</title>
+
+<!-- Google Fonts: Fraunces (заголовки-назви) + Inter (основний текст) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+
+<!--
+  <model-viewer> — офіційний веб-компонент Google для 3D/AR у браузері.
+  Завантажується з CDN, окремий npm-білд не потрібен.
+  Документація: https://modelviewer.dev/
+-->
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head>
+<body>
+
+<!-- =========== SVG-СПРАЙТ ІКОНОК (лінійний стиль, без заливки) ===========
+     Іконки описані один раз тут і використовуються по всій сторінці через
+     <use href="#icon-...">. -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icon-cube" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v9m0 9v-9m0 0L4 7.5M12 12l8-4.5"/></symbol>
+  <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+  <symbol id="icon-gallery" viewBox="0 0 24 24"><rect x="3" y="3" width="13" height="13" rx="2"/><path d="M8 21h10a2 2 0 0 0 2-2V8"/></symbol>
+  <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="icon-building" viewBox="0 0 24 24"><rect x="4" y="9" width="7" height="12"/><rect x="13" y="4" width="7" height="17"/><path d="M7 13h1M7 17h1M16 8h1M16 12h1M16 16h1"/></symbol>
+  <symbol id="icon-cross" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="icon-ar" viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M20 8V5a1 1 0 0 0-1-1h-3M4 16v3a1 1 0 0 0 1 1h3M20 16v3a1 1 0 0 1-1 1h-3"/><path d="M12 8l4 2.3v4.4L12 17l-4-2.3v-4.4L12 8z"/></symbol>
+  <symbol id="icon-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="icon-menu" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+</svg>
+
+
+<!-- =============================== ХЕДЕР =============================== -->
+<header class="site-header" id="siteHeader">
+  <a href="index.html" class="site-logo">
+    <img src="assets/images/basic/logo.svg" alt="Логотип проєкту" class="site-logo__image">
+    <span>Пам’ятки міста <span class="text-highlight">Березне</span></span>
+  </a>
+  <!-- Показується лише на планшеті/десктопі, де немає нижньої навігації -->
+  <a href="index.html" class="header-menu-link">
+    <svg class="icon"><use href="#icon-menu"></use></svg>
+    <span>Усі об’єкти</span>
+  </a>
+</header>
+
+
+<main>
+
+  <!-- =================== 1. АКЦЕНТНА СЕКЦІЯ (HERO) =================== -->
+  <section class="hero" id="section-model">
+    <div class="container">
+
+      <div class="model-stage" id="modelStage">
+        <!-- Кастомний скелетон показується, доки модель не завантажиться
+             (клас .model-ready додає landmark.js після події 'load') -->
+        <div class="model-skeleton" aria-hidden="true">
+          <svg class="model-skeleton__icon"><use href="#icon-cube"></use></svg>
+        </div>
+
+        <!--
+          Атрибути src/ios-src/camera-orbit/ar та інші проставляються
+          динамічно в landmark.js — там докладний коментар по кожному
+          параметру камери. Тут лише статичні атрибути.
+        -->
+        <model-viewer
+          id="landmarkModel"
+          alt=""
+        ></model-viewer>
+      </div>
+
+      <div class="hero__controls">
+        <button type="button" class="btn btn--ar" id="arTriggerButton" hidden="true" inert="" style="display: none;">
+          <svg class="icon"><use href="#icon-ar"></use></svg>
+          <span>В доповнену реальність!</span>
+        </button>
+
+        <!-- Універсальний клас .caption — для будь-яких
+             приглушених підписів на сторінці -->
+        <p class="caption caption-in-card">
+          * Цифрова реконструкція за архівними фото. Деякі деталі умовні.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- =============== 2. ЗАГАЛЬНІ ВІДОМОСТІ ПРО ОБ'ЄКТ =============== -->
+  <section class="info-section appear" id="section-info">
+    <div class="container">
+      <h1 class="landmark-name" id="landmarkName">Назва пам’ятки</h1>
+      <div class="landmark-description" id="landmarkDescription">Опис завантажується…</div>
+
+      <div class="badge-row">
+        <span class="badge badge--accent" id="badgeType">
+          <span id="badgeTypeText">Тип об’єкту</span>
+        </span>
+        <span class="badge badge--info" id="badgeBuilt">
+          <svg class="icon"><use href="#icon-building"></use></svg>
+          <span id="badgeBuiltText">—</span>
+        </span>
+        <span class="badge badge--danger" id="badgeDestroyed">
+          <svg class="icon"><use href="#icon-cross"></use></svg>
+          <span id="badgeDestroyedText">—</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============== 3. ГАЛЕРЕЯ "МІСЦЕ ЗАРАЗ" =============== -->
+  <section class="gallery-section appear" id="section-gallery-now">
+    <div class="container">
+      <h2 class="section-title">Місце зараз</h2>
+      <span class="section-subtitle">Ці фото зроблені на місці пам’ятки у сучасний період.</span>
+      <!--
+        data-loop="true"      — вмикає безкінечний циклічний скрол
+        data-autoplay="true"  — додає повільну автоматичну прокрутку
+                                 (вимикається під час взаємодії користувача
+                                 і поважає prefers-reduced-motion)
+        style="--gallery-rows: 2" — кількість рядків сітки
+      -->
+      <div
+        class="gallery__track"
+        id="galleryNow"
+        data-loop="false"
+        data-autoplay="false"
+        style="--gallery-rows: 2"
+      ></div>
+    </div>
+  </section>
+
+
+  <!-- =============== 4. ГАЛЕРЕЯ "ЦИФРОВА РЕКОНСТРУКЦІЯ" =============== -->
+  <section class="gallery-section appear" id="section-gallery-reconstruction">
+    <div class="container">
+      <h2 class="section-title">Цифрова реконструкція</h2>
+      <span class="section-subtitle">Ці графічні матеріали створені на основі архівних фото та документів. Деякі деталі умовні.</span>
+      <div
+        class="gallery__track"
+        id="galleryReconstruction"
+        data-loop="false"
+        data-autoplay="false"
+        style="--gallery-rows: 2"
+      ></div>
+    </div>
+  </section>
+
+
+  <!-- =============== 5. ГАЛЕРЕЯ "АРХІВНІ ФОТО" =============== -->
+  <section class="gallery-section appear" id="section-gallery-archive">
+    <div class="container">
+      <h2 class="section-title">Архівні фото</h2>
+      <span class="section-subtitle">Ці фото та документи збереглися у фондах музею та архіву, або є опублікованими у відкритих джерелах.</span>
+      <div
+        class="gallery__track"
+        id="galleryArchive"
+        data-loop="false"
+        data-autoplay="false"
+        style="--gallery-rows: 2"
+      ></div>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- =============================== ФУТЕР =============================== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__info footer-column">
+        <p class="site-footer__title">Пам’ятки міста <span class="text-highlight">Березне</span></p>
+        <p class="caption">
+          Проєкт реалізовано в межах ініціативи «Ревіталізація пам'яті: арттерапія через локальну історію» 
+          <a href="https://www.facebook.com/p/%D0%93%D1%80%D0%BE%D0%BC%D0%B0%D0%B4%D1%81%D1%8C%D0%BA%D0%B0-%D0%BE%D1%80%D0%B3%D0%B0%D0%BD%D1%96%D0%B7%D0%B0%D1%86%D1%96%D1%8F-%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D0%BD%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B0-%D0%91%D1%80%D0%B0%D0%BC%D0%B0-100068312231565/" target="_blank" rel="noopener noreferrer">ГО «Березнівська БРАМА»</a> 
+          у партнерстві з 
+          <a href="https://bereznemuseum.org.ua/" target="_blank" rel="noopener noreferrer">Березнівським краєзнавчим музеєм</a> 
+          за підтримки 
+          <a href="https://ucf.in.ua/" target="_blank" rel="noopener noreferrer">Українського культурного фонду</a>.
+        </p>
+        <div class="site-footer__members-grid">
+          <a href="https://ucf.in.ua/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/basic/ucf-logo.svg" alt="Логотип Українського культурного фонду" class="site-footer__member-logo">
+          </a>
+          <a href="https://www.facebook.com/p/%D0%93%D1%80%D0%BE%D0%BC%D0%B0%D0%B4%D1%81%D1%8C%D0%BA%D0%B0-%D0%BE%D1%80%D0%B3%D0%B0%D0%BD%D1%96%D0%B7%D0%B0%D1%86%D1%96%D1%8F-%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D0%BD%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B0-%D0%91%D1%80%D0%B0%D0%BC%D0%B0-100068312231565/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/basic/bereznivska-brama-logo.webp" alt="Логотип ГO Березнівська БРАМА" class="site-footer__member-logo">
+          </a>
+          <a href="https://bereznemuseum.org.ua/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/basic/bereznemuseum-logo.svg" alt="Логотип Березнівського краєзнавчого музею" class="site-footer__member-logo">
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© <span id="copyright-year"></span></p>
+  </div>
+</footer>
+
+<!-- =================== НИЖНЯ НАВІГАЦІЯ (лише мобільні) =================== -->
+<!-- ВАЖЛИВО: .fab-menu-button має йти в розмітці ОДРАЗУ ПІСЛЯ
+     .mobile-bottom-nav — від цього залежить CSS-селектор
+     ".mobile-bottom-nav.scroll-down ~ .fab-menu-button" у style.css -->
+<nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+  <a class="mobile-bottom-nav__item" href="#section-model" data-target="#section-model">
+    <svg class="icon"><use href="#icon-cube"></use></svg>
+    <span>3D огляд</span>
+  </a>
+  <a class="mobile-bottom-nav__item" href="#section-info" data-target="#section-info">
+    <svg class="icon"><use href="#icon-info"></use></svg>
+    <span>Відомості</span>
+  </a>
+  <a class="mobile-bottom-nav__item" href="#section-gallery-now" data-target="#section-gallery-now">
+    <svg class="icon"><use href="#icon-gallery"></use></svg>
+    <span>Галерея</span>
+  </a>
+  <!-- Посилання на карти проставляється динамічно в landmark.js (getMapUrl) -->
+  <a class="mobile-bottom-nav__item" id="navLocationLink" href="#" target="_blank" rel="noopener">
+    <svg class="icon"><use href="#icon-pin"></use></svg>
+    <span>Локація</span>
+  </a>
+</nav>
+
+<a class="fab-menu-button" href="index.html" aria-label="Усі об’єкти">
+  <svg class="icon"><use href="#icon-menu"></use></svg>
+</a>
+
+
+<!-- =============================== ЛАЙТБОКС =============================== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Закрити">
+    <svg class="icon"><use href="#icon-close"></use></svg>
+  </button>
+  <img id="lightboxImage" src="" alt="">
+  <p class="lightbox__caption" id="lightboxCaption"></p>
+</div>
+
+
+<!-- Порядок підключення важливий: data → common → landmark -->
+<script src="js/data.js"></script>
+<script src="js/common.js"></script>
+<script src="js/landmark.js"></script>
+</body>
+</html>

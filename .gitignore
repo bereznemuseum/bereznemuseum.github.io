@@ -1,0 +1,5 @@
+environments/
+# Ignore all files in the assets/images/data/ directory and child directories that have a .png or .jpg extension
+# Ignores temporary images bebore they are converted to .webp format
+assets/images/data/**/*.png
+assets/images/data/**/*.jpg

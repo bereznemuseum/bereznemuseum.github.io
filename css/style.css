@@ -1,0 +1,963 @@
+/* ==========================================================================
+   ГОЛОВНИЙ СТИЛЬОВИЙ ФАЙЛ
+   ==========================================================================
+   Структура файлу:
+   1.  Токени дизайну (:root)      — єдине джерело для кольору/відступів
+   2.  Скидання стилів (reset)
+   3.  Базова типографіка
+   4.  Утиліти (container, badge, caption, btn, appear-анімація)
+   5.  Хедер
+   6.  Нижня навігація + кнопка "Меню" (FAB)
+   7.  Акцентна секція (model-viewer, скелетон, AR-кнопка)
+   8.  Секція "Загальні відомості"
+   9.  Галереї (горизонтальний скрол + лайтбокс)
+   10. Футер
+   11. Сторінка "Меню об'єктів" (картки)
+   12. Медіа-запити для планшетів/десктопів (mobile-first — тут РОЗШИРЮЄТЬСЯ для декстопу)
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. ТОКЕНИ ДИЗАЙНУ
+   Змінюйте значення тут — і зміна одразу пошириться по всьому застосунку.
+   Це дає модульність: кольори/заокруглення/відступи узгоджені і ніде не "заходкожені".
+   ========================================================================== */
+:root {
+  /* ---- Колірна схема: відтінки білого (фон) ---- */
+  --color-bg: #ffffff;             /* основний фон сторінки */
+  --color-bg-soft: #f6f7f2;        /* легкий відтінок для чергування секцій, скелетонів */
+  --color-surface: #ffffff;        /* фон карток/поверхонь */
+  --color-border: #e8e9e1;         /* тонкі роздільники, рамки карток */
+  --color-bg-darker: #f0f0f0;      /* темний колір для тіней, іконок, графіки */
+  --color-bg-accent: #e1ebd6;
+
+  /* ---- Текст: приглушений темно-сірий ---- */
+  --color-text: #3a3d36;           /* основний текст */
+  --color-text-muted: #767c6f;     /* другорядний текст, підписи */
+  --color-text-on-accent: #2b3320; /* текст поверх акцентного (зеленого) фону */
+
+  /* ---- Акцентна палітра: відтінки зеленого ---- */
+  --color-accent-50:  #ececa3;     /* найсвітліший */
+  --color-accent-300: #b5e550;     /* яскравий */
+  --color-accent-500: #abc32f;     /* середній */
+  --color-accent-700: #809c13;     /* глибокий */
+  --color-accent-900: #607c3c;     /* найглибший */
+
+  /* ---- Допоміжні кольори для бейджів (побудова / знищення / інше) ---- */
+  --color-info: #3f6ea3;           /* синій — "роки побудови" */
+  --color-info-bg: #e8eef7;
+  --color-danger: #a8533f;         /* притлумлений цегляно-червоний — "роки знищення" */
+  --color-danger-bg: #f7ece8;
+
+  /* ---- Заокруглення кутів (м'які форми) ---- */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* ---- Тіні: м'які, розмиті, майже непомітні ---- */
+  --shadow-sm: 0 1px 2px rgba(42, 46, 36, .05), 0 1px 3px rgba(42, 46, 36, .06);
+  --shadow-md: 0 6px 18px rgba(42, 46, 36, .09);
+  --shadow-lg: 0 16px 40px rgba(42, 46, 36, .14);
+
+  /* ---- Шкала відступів ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ---- Типографіка ----
+     Display (Fraunces) — вживається ощадливо, лише для назв пам'яток:
+     теплий, "музейний" серифний шрифт, що додає ваги історичному контенту.
+     Body (Inter) — чистий гуманістичний sans-serif для всього іншого. */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* ---- Розміри службових елементів (використовуються і в CSS, і в JS-розрахунках) ---- */
+  --header-height: 56px;
+  --bottom-nav-height: 64px;
+
+  /* ---- Тривалості переходів ---- */
+  --transition-fast: .18s ease;
+  --transition-base: .28s ease;
+  --transition-slow: .6s cubic-bezier(.22, .61, .36, 1);
+}
+
+
+/* ==========================================================================
+   2. СКИДАННЯ СТИЛІВ
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  /* Плавний скрол при переходах по якірних посиланнях (навігація по секціях) */
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+ul { list-style: none; margin: 0; padding: 0; }
+h1, h2, h3, p { margin: 0; }
+.text-highlight { color: var(--color-accent-900); }
+
+/* Повага до налаштувань користувача: вимикає анімації, якщо він просив менше руху */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Видима рамка фокусу для клавіатурної навігації */
+:focus-visible {
+  outline: 2px solid var(--color-accent-700);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+
+/* ==========================================================================
+   3. БАЗОВА ТИПОГРАФІКА
+   ========================================================================== */
+.section-title {
+  font-size: clamp(1.125rem, 1rem + 1vw, 1.375rem);
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.section-subtitle {
+  font-size: .9375rem;
+  margin-bottom: var(--space-4);
+  max-width: 56ch; /* оптимальна довжина рядка для читабельності */
+}
+
+.landmark-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.4rem + 2.2vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+  color: var(--color-text);
+}
+
+.landmark-description {
+  margin-top: var(--space-3);
+  font-size: 1rem;
+  color: var(--color-text);
+  max-width: 62ch; /* оптимальна довжина рядка для читабельності */
+}
+
+.landmark-description p {
+  margin: 0 0 var(--space-3);
+}
+
+.landmark-description p:last-child {
+  margin-bottom: 0;
+}
+
+.landmark-description strong {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.landmark-description em {
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+
+/* ==========================================================================
+   4. УТИЛІТИ
+   ========================================================================== */
+
+/* Контейнер: центрує контент і обмежує максимальну ширину на великих екранах */
+.container {
+  width: 100%;
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+/* Універсальний підпис — де потрібен приглушений дрібний текст
+   (підпис під моделлю, примітки тощо) */
+.caption {
+  font-size: .8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* Підпис у картці (наприклад, під моделлю) — темний фон, світлий текст,
+   заокруглені краї, внутрішні відступи. Використовується в .hero__controls
+   під AR-кнопкою. */
+.caption-in-card {
+  color: var(--color-text);
+  background: var(--color-bg-darker);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: .2rem 1.2rem;
+  max-width: 80%;
+}
+
+/* Іконка з набору inline-SVG-спрайту (лінійний стиль, без заливки) */
+.icon {
+  width: 1.25em;
+  height: 1.25em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* Базова кнопка + акцентний варіант (AR-кнопка) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: .875rem 1.375rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: .9375rem;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn--ar {
+  background: linear-gradient(135deg, var(--color-accent-300), var(--color-accent-500));
+  color: var(--color-text-on-accent);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+  justify-content: center;
+}
+.btn--ar:hover  { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn--ar:active { transform: translateY(0); }
+
+/* Бейджі загальних відомостей: базовий клас + 3 колірні модифікатори */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: .375rem .75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-size: .8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.badge:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.badge .icon { width: 1em; height: 1em; }
+
+.badge--accent { background: var(--color-bg);         color: var(--color-text);   border-color: var(--color-text-muted); }
+.badge--info   { background: var(--color-info-bg);    color: var(--color-info);   border-color: var(--color-info) }
+.badge--danger { background: var(--color-danger-bg);  color: var(--color-danger); border-color: var(--color-danger) }
+
+/* Анімація появи елементів при скролі (клас .appear додається до розмітки,
+   клас .inview додає JS через IntersectionObserver — див. common.js) */
+.appear {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .7s ease, transform .7s cubic-bezier(.22, .61, .36, 1);
+}
+.appear.inview { opacity: 1; transform: none; }
+
+
+/* ==========================================================================
+   5. ХЕДЕР
+   Фіксована тонка стрічка вгорі. Ховається при скролі вниз (див. common.js).
+   ========================================================================== */
+.site-header {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: var(--header-height);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--space-4);
+  background: rgba(255, 255, 255, .86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+  transition: transform var(--transition-base);
+}
+/* Клас додається через JS при активному скролі вниз */
+.site-header.scroll-hidden { transform: translateY(-100%); }
+
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  font-size: .9375rem;
+  color: var(--color-text);
+}
+.site-logo__image {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+/* Текстове посилання "Меню" в хедері — показується лише на планшеті/десктопі,
+   бо там нижньої панелі й плаваючої кнопки немає (див. медіа-запити нижче) */
+.header-menu-link {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+  font-size: .9375rem;
+  color: var(--color-bg);
+  background: var(--color-accent-900);
+  padding: .5rem 1.25rem;
+  border-radius: var(--radius-pill);
+  transition: box-shadow var(--transition-fast), background var(--transition-fast);
+}
+
+.header-menu-link svg {
+  color: var(--color-bg);
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.header-menu-link:hover {
+  background: var(--color-accent-700);
+  box-shadow: var(--shadow-md);
+}
+
+
+/* ==========================================================================
+   6. НИЖНЯ НАВІГАЦІЯ (лише мобільні) + ПЛАВАЮЧА КНОПКА "МЕНЮ"
+   ========================================================================== */
+.mobile-bottom-nav {
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline: 0;
+  height: var(--bottom-nav-height);
+  z-index: 100;
+  display: flex;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -6px 20px rgba(42, 46, 36, .06);
+  padding-bottom: env(safe-area-inset-bottom, 0); /* під "чубчик"/жести iOS */
+  transition: transform var(--transition-base);
+  transform-origin: bottom center;
+}
+/* Приховування при скролі вниз — клас з JS-фрагмента */
+.mobile-bottom-nav.scroll-down {
+  transform: translateY(150%) scaleY(0);
+}
+
+.mobile-bottom-nav__item {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: .6875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+}
+.mobile-bottom-nav__item .icon { width: 22px; height: 22px; }
+.mobile-bottom-nav__item.is-active,
+.mobile-bottom-nav__item:hover {
+  color: var(--color-accent-700);
+}
+
+/* Плаваюча кругла кнопка "Меню" — маленька, біла, з акцентною іконкою */
+.fab-menu-button {
+  position: fixed;
+  right: var(--space-4);
+  bottom: calc(var(--bottom-nav-height) + var(--space-4));
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-700);
+  z-index: 101;
+  transition: bottom var(--transition-base), transform var(--transition-fast);
+}
+.fab-menu-button:hover { transform: translateY(-2px); }
+.fab-menu-button .icon { width: 24px; height: 24px; }
+
+/* Коли нижня панель ховається — кнопка "Меню" опускається нижче,
+   бо їй уже не треба лишати місце над панеллю.
+   Важливо: у HTML .fab-menu-button має йти ПІСЛЯ .mobile-bottom-nav,
+   інакше комбінатор ~ (наступний сиблінг) не спрацює. */
+.mobile-bottom-nav.scroll-down ~ .fab-menu-button {
+  bottom: 15px;
+}
+
+
+/* ==========================================================================
+   7. АКЦЕНТНА СЕКЦІЯ (HERO): model-viewer, скелетон завантаження, AR-кнопка
+   ========================================================================== */
+.hero {
+  padding-top: calc(var(--header-height) + var(--space-5));
+  padding-bottom: var(--space-6);
+}
+
+/* "Сцена" моделі: фіксовані пропорції, заокруглені кути, м'яка тінь.
+   Тут задається лише ОБГОРТКА — сам <model-viewer> займає 100% всередині. */
+.model-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;      /* вертикальніше на мобільному — краще показує висоту споруди */
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  background: var(--color-bg-darker);
+  box-shadow: var(--shadow-md);
+}
+
+model-viewer {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+  /* Кастомна CSS-змінна model-viewer для кольору "Poster"-заглушки під час
+     завантаження — узгоджуємо з м'яким фоном, а не з чорним за замовчуванням */
+  --poster-color: transparent;
+}
+
+/* Приховує стандартну вбудовану AR-кнопку model-viewer, бо в UI вже
+   використовується власна кнопка поза компонентом. */
+model-viewer::part(default-ar-button) {
+  display: none !important;
+}
+
+/* Клас додає JS, коли модель повністю завантажена (подія 'load') */
+.model-stage.model-ready model-viewer { opacity: 1; }
+
+/* ---- Кастомний скелетон (замінює стандартний poster) ---- */
+.model-skeleton {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--color-bg-soft), var(--color-bg-darker));
+  transition: opacity var(--transition-base);
+  overflow: hidden;
+}
+.model-stage.model-ready .model-skeleton {
+  opacity: 0;
+  pointer-events: none;
+}
+/* Іконка-заглушка куба в центрі, що м'яко пульсує */
+.model-skeleton__icon {
+  width: 64px;
+  height: 64px;
+  color: var(--color-accent-500);
+  fill: transparent;
+  stroke: currentColor;
+  opacity: .55;
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+}
+/* Діагональний "блиск", що пробігає по скелетону зліва направо */
+.model-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, .55) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  animation: skeleton-shimmer 2.2s ease-in-out infinite;
+}
+@keyframes skeleton-shimmer {
+  100% { transform: translateX(100%); }
+}
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: .35; transform: scale(1); }
+  50%      { opacity: .65; transform: scale(1.1); }
+}
+
+/* Рядок керування під моделлю: AR-кнопка + підпис.
+   На мобільному — стовпчик, на ширших екранах — рядок (див. медіа-запити) */
+.hero__controls {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+
+/* ==========================================================================
+   8. СЕКЦІЯ "ЗАГАЛЬНІ ВІДОМОСТІ"
+   ========================================================================== */
+.info-section { padding-block: var(--space-7); }
+
+#section-info {
+  background: var(--color-bg-darker);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  border: 1px solid var(--color-border);
+  border-inline-start: 4px solid var(--color-accent-500);
+}
+
+.badge-row {
+  margin-top: var(--space-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+
+/* ==========================================================================
+   9. ГАЛЕРЕЇ (горизонтальний скрол, N рядків, лайтбокс)
+   ========================================================================== */
+.gallery-section { padding-block: var(--space-6); }
+
+.gallery__track {
+  /* --gallery-rows задає кількість рядків галереї — легко змінити
+     інлайн-стилем на конкретному екземплярі: style="--gallery-rows: 3" */
+  --gallery-rows: 2;
+
+  margin-top: var(--space-4);
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--gallery-rows), 1fr);
+  grid-auto-columns: min(72vw, 260px);
+  gap: var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: var(--space-2);
+
+  /* Ховає системний скролбар, залишаючи скрол доступним */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  /* Не використовуємо плавний скрол для горизонтальної галереї, бо він
+     конфліктує з вертикальним скролом сторінки на мобільних пристроях.
+     Тому тут скасовуємо scroll-behavior, щоб не було "залипання" при
+     вертикальному скролі. */
+  scroll-behavior: auto;
+}
+.gallery__track::-webkit-scrollbar { display: none; }
+
+.gallery__item {
+  position: relative;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  scroll-snap-align: start;
+  background: var(--color-bg-darker);
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  height: auto;
+  cursor: zoom-in;
+}
+.gallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base);
+}
+.gallery__item:hover img { transform: scale(1.04); }
+
+/* Напівпрозорий підпис у кутку фото (авторство/уточнення) —
+   коли додано елемент .photo-credit усередину .gallery__item за потреби */
+.photo-credit {
+  position: absolute;
+  right: var(--space-2);
+  bottom: var(--space-2);
+  max-width: calc(100% - var(--space-4));
+  padding: .25rem .5rem;
+  background: rgba(28, 30, 24, .58);
+  color: #fdfdfa;
+  font-size: .6875rem;
+  line-height: 1.3;
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(2px);
+}
+
+/* ---- Лайтбокс (повноекранний перегляд фото) ---- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 19, 17, .90);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+  padding: var(--space-5);
+}
+.lightbox.is-active { opacity: 1; pointer-events: auto; }
+.lightbox img {
+  max-width: 92vw;
+  max-height: 84vh;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+.lightbox__close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox__caption {
+  position: absolute;
+  bottom: var(--space-5);
+  left: 50%;
+  transform: translateX(-50%);
+  color: #f0f1ea;
+  font-size: .8125rem;
+  text-align: center;
+  max-width: 90vw;
+}
+
+
+/* ==========================================================================
+   10. ФУТЕР
+   ========================================================================== */
+.site-footer {
+  padding-block: var(--space-7);
+  margin-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-soft);
+}
+.site-footer__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.footer-column {
+    position: relative;
+}
+/* Малює лінію перед кожною колонкою, КРІМ першої */
+.footer-column:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    height: 100%;   /* Лінія займатиме 80% висоти колонки */
+    width: 1px;
+    background-color: var(--color-border);
+    opacity: 0.85;
+}
+.site-footer__info { 
+  display: flex; 
+  flex-direction: column; 
+  gap: var(--space-1); 
+  max-width: 56ch;
+}
+.site-footer__info a { font-weight: 500; transition: color var(--transition-fast); }
+.site-footer__info a:hover { color: var(--color-accent-700); }
+.site-footer__title { font-weight: 700; margin-bottom: var(--space-2); }
+.site-footer__members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+.site-footer__member-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: grayscale(1) brightness(.8);
+  transition: filter var(--transition-fast);
+}
+.site-footer__member-logo svg { width: 100%; height: 100%; }
+.site-footer__member-logo:hover { filter: grayscale(0) brightness(1); }
+.site-footer__links { display: flex; flex-direction: column; gap: var(--space-2); }
+.site-footer__links a { color: var(--color-text-muted); transition: color var(--transition-fast); }
+.site-footer__links a:hover { color: var(--color-accent-700); }
+.site-footer__link::before {
+  position: relative;
+  top: -1px;
+  content: '•';
+  display: inline-block;
+  margin-right: var(--space-2);
+  color: var(--color-accent-700);
+}
+.site-footer__bottom {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+  font-size: .8125rem;
+  color: var(--color-text-muted);
+}
+/* Резервуємо місце знизу під фіксовану мобільну навігацію, щоб футер нею не перекривався */
+.site-footer { padding-bottom: calc(var(--space-7) + var(--bottom-nav-height)); }
+
+
+/* ==========================================================================
+   11. СТОРІНКА "МЕНЮ ОБ'ЄКТІВ" (картки)
+   ========================================================================== */
+.menu-hero {
+  padding-top: calc(var(--header-height) + var(--space-6));
+  padding-bottom: var(--space-5);
+}
+.menu-hero__title {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.8rem + 2.5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+  background-image: linear-gradient(135deg, var(--color-accent-900) 0%, var(--color-accent-700) 100%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation:bgFlow 7s infinite linear;
+}
+@keyframes bgFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.menu-hero__subtitle {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  max-width: 56ch;
+}
+
+.landmark-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-5);
+  padding-block: var(--space-5) var(--space-8);
+}
+
+.landmark-card {
+  display: block;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.landmark-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+.landmark-card__image {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-bg-darker);
+  transition: transform var(--transition-base);
+}
+.landmark-card:hover .landmark-card__image { transform: scale(1.04); }
+.landmark-card__name {
+  padding: var(--space-3) var(--space-4) var(--space-1);
+  text-align: center;
+  font-weight: 700;
+  font-size: clamp(1rem, .875rem + 1vw, 1.125rem);
+  color: var(--color-text);
+  transition: color var(--transition-fast);
+}
+.landmark-card:hover .landmark-card__name { color: var(--color-accent-900); }
+.landmark-card__description {
+  display: -webkit-box;
+  font-size: .8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  padding: 0 var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+/* Порожній стан (наприклад, якщо дані ще не додані) */
+.empty-state-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 500px;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-bg-darker);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.empty-state-image {
+  width: 220px;
+  height: 220px;
+  color: var(--color-accent-300);
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: empty-state-image-pulse 3s ease-in-out infinite;
+}
+@keyframes empty-state-image-pulse {
+  0%, 100% { opacity: .9; transform: scale(.9); }
+  50%      { opacity: 1; transform: scale(1); }
+}
+
+.empty-state-title {
+  font-size: clamp(1.125rem, 1rem + 1vw, 1.375rem);
+  font-weight: 700;
+  color: var(--color-accent-900);
+}
+
+.empty-state-subtitle {
+  color: var(--color-text-muted);
+}
+
+.empty-state-link {
+  color: var(--color-bg);
+  background: var(--color-accent-900);
+  border-radius: var(--radius-pill);
+  padding: .5rem 1.25rem;
+  font-weight: 600;
+  font-size: .875rem;
+  text-decoration: none;
+  margin-top: var(--space-3);
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.empty-state-link:hover {
+  background: var(--color-accent-700);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+
+/* ==========================================================================
+   12. МЕДІА-ЗАПИТИ (mobile-first: тут РОЗШИРЮЄМО стилі під більші екрани)
+   ========================================================================== */
+
+/* ---- Планшети (≥600px) ---- */
+@media (min-width: 600px) {
+  .model-stage { aspect-ratio: 16 / 10; }
+
+  .hero__controls { flex-direction: row; align-items: center; justify-content: space-between; }
+
+  .badge-row { gap: var(--space-3); }
+
+  .site-footer__grid { flex-direction: row; justify-content: space-between; flex-wrap: wrap; }
+}
+
+/* ---- Десктоп (≥900px): ховає мобільну навігацію, показує посилання в хедері ---- */
+@media (min-width: 900px) {
+  :root { --header-height: 64px; }
+
+  .mobile-bottom-nav,
+  .fab-menu-button {
+    display: none;
+  }
+
+  .site-header { padding-inline: var(--space-7); }
+
+  /* Якщо мобільної нижньої панелі немає — футеру не треба резервувати під неї місце */
+  .site-footer { padding-bottom: var(--space-7); }
+
+  .header-menu-link { display: inline-flex; }
+
+  .container { padding-inline: var(--space-6); }
+
+  .hero { padding-top: calc(var(--header-height) + var(--space-8)); }
+  .model-stage { aspect-ratio: 21 / 11; }
+
+  .btn--ar {
+    width: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .caption-in-card {
+    max-width: unset;
+  }
+
+  .landmark-name { 
+    background: var(--color-bg);
+    border-radius: var(--radius-pill);
+    padding: var(--space-2);
+    width: fit-content;
+   }
+
+  .gallery__track {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-rows: none;
+    grid-auto-columns: unset;
+    overflow-x: visible;
+    scroll-snap-type: none;
+    padding-bottom: 0;
+  }
+
+  .gallery__item {
+    width: auto;
+    height: auto;
+  }
+
+  .gallery__item img { 
+    width: 100%; 
+    height: 100%; 
+  }
+
+  .landmark-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+}
+
+/* ---- Великий десктоп (≥1200px) ---- */
+@media (min-width: 1200px) {
+  .container { padding-inline: var(--space-8); }
+}
