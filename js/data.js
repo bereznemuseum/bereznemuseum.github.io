@@ -181,12 +181,15 @@ const LANDMARKS_DATA = [
     ],
     galleryReconstruction: [
       { src: 'assets/images/data/pivdenni-bramni-vorota/reconstruction/pivdenni-bramni-vorota-digital-reconstruction-isometric.webp', credit: 'Цифрова реконструкція, 2026' },
-      { src: 'assets/images/data/pivdenni-bramni-vorota/reconstruction/pivdenni-bramni-vorota-digital-reconstruction-front.webp', credit: 'Цифрова реконструкція (спереду), 2026' },
+      { src: 'assets/images/data/pivdenni-bramni-vorota/reconstruction/pivdenni-bramni-vorota-digital-reconstruction-front.webp', credit: 'Цифрова реконструкція, 2026' },
+      { src: 'assets/images/data/pivdenni-bramni-vorota/reconstruction/pivdenni-bramni-vorota-digital-reconstruction-side.webp', credit: 'Цифрова реконструкція (збоку), 2026' },
+      { src: 'assets/images/data/pivdenni-bramni-vorota/reconstruction/pivdenni-bramni-vorota-digital-reconstruction-back.webp', credit: 'Цифрова реконструкція, 2026' },
     ],
     galleryArchive: [
       { src: 'assets/images/data/pivdenni-bramni-vorota/archive/pivdenni-bramni-vorota-archive1.webp', credit: 'Фото 1930-х років. Колекція  Березнівського краєзнавчого музею.' },
       { src: 'assets/images/data/pivdenni-bramni-vorota/archive/pivdenni-bramni-vorota-archive2.webp', credit: 'Фото 1930-х років. Колекція  Березнівського краєзнавчого музею.' },
       { src: 'assets/images/data/pivdenni-bramni-vorota/archive/pivdenni-bramni-vorota-archive3.webp', credit: 'Фото 1930-х років. Колекція  Березнівського краєзнавчого музею.' },
+      { src: 'assets/images/data/pivdenni-bramni-vorota/archive/pivdenni-bramni-vorota-archive4.webp', credit: 'Фото 1930-х років. Колекція  Березнівського краєзнавчого музею.' },
     ],
   },
 ];
