@@ -326,7 +326,7 @@ h1, h2, h3, p { margin: 0; }
 .site-logo__image {
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   object-fit: cover;
 }
 

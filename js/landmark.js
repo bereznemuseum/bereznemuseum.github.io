@@ -193,7 +193,7 @@ function populateInfo(landmark) {
     hideWhenEmpty: true,
     hideTargetSelector: '#badgeBuilt',
   });
-  setText('#badgeDestroyedText', landmark.yearsDestroyed ? `Знищено: ${landmark.yearsDestroyed}` : null, {
+  setText('#badgeDestroyedText', landmark.yearsDestroyed ? `Зруйновано: ${landmark.yearsDestroyed}` : null, {
     hideWhenEmpty: true,
     hideTargetSelector: '#badgeDestroyed',
   });
