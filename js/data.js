@@ -83,8 +83,8 @@ const LANDMARKS_DATA = [
     yearsBuilt: '1813 \u2013 1817',
     yearsDestroyed: '1963',
     location: {
-      lat: 50.6215,
-      lng: 26.2489,
+      lat: 51.003555,
+      lng: 26.757843,
       label: 'Костел Святого Каетана \u2014 місце розташування',
     },
     model: {
@@ -128,8 +128,8 @@ const LANDMARKS_DATA = [
     yearsBuilt: '1910',
     yearsDestroyed: '',
     location: {
-      lat: 50.6215,
-      lng: 26.2489,
+      lat: 51.002505,
+      lng: 26.755856,
       label: 'Головна єврейська синагога \u2014 місце розташування',
     },
     model: {
@@ -165,8 +165,8 @@ const LANDMARKS_DATA = [
     yearsBuilt: 'XVI ст.',
     yearsDestroyed: '1963',
     location: {
-      lat: 50.6215,
-      lng: 26.2489,
+      lat: 51.001553,
+      lng: 26.746377,
       label: 'Південні брамні ворота \u2014 місце розташування',
     },
     model: {
