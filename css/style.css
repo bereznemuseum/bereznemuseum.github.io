@@ -71,11 +71,10 @@
   --space-8: 64px;
   --space-9: 96px;
 
-  /* ---- Типографіка ----
-     Display (Fraunces) — вживається ощадливо, лише для назв пам'яток:
-     теплий, "музейний" серифний шрифт, що додає ваги історичному контенту.
-     Body (Inter) — чистий гуманістичний sans-serif для всього іншого. */
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    /* ---- Типографіка ----
+      Display (Literata) — книжковий серифний шрифт для назв пам'яток.
+      Body (Inter) — гуманістичний sans-serif для всього іншого. */
+    --font-display: 'Literata', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* ---- Розміри службових елементів (використовуються і в CSS, і в JS-розрахунках) ---- */
@@ -86,6 +85,54 @@
   --transition-fast: .18s ease;
   --transition-base: .28s ease;
   --transition-slow: .6s cubic-bezier(.22, .61, .36, 1);
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/inter-v20-cyrillic_latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../assets/fonts/inter-v20-cyrillic_latin-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/inter-v20-cyrillic_latin-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/inter-v20-cyrillic_latin-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Literata';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../assets/fonts/literata-v40-cyrillic_latin-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Literata';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/literata-v40-cyrillic_latin-600.woff2') format('woff2');
 }
 
 
@@ -139,8 +186,9 @@ h1, h2, h3, p { margin: 0; }
    3. БАЗОВА ТИПОГРАФІКА
    ========================================================================== */
 .section-title {
+  font-family: var(--font-display);
   font-size: clamp(1.125rem, 1rem + 1vw, 1.375rem);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -.01em;
 }
 
@@ -748,7 +796,7 @@ model-viewer::part(default-ar-button) {
   display: inline-block;
   font-family: var(--font-display);
   font-size: clamp(2.25rem, 1.8rem + 2.5vw, 3.25rem);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.15;
   letter-spacing: -.01em;
   background-image: linear-gradient(135deg, var(--color-accent-900) 0%, var(--color-accent-700) 100%);
@@ -800,7 +848,8 @@ model-viewer::part(default-ar-button) {
 .landmark-card__name {
   padding: var(--space-3) var(--space-4) var(--space-1);
   text-align: center;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-weight: 600;
   font-size: clamp(1rem, .875rem + 1vw, 1.125rem);
   color: var(--color-text);
   transition: color var(--transition-fast);
@@ -856,7 +905,8 @@ model-viewer::part(default-ar-button) {
 
 .empty-state-title {
   font-size: clamp(1.125rem, 1rem + 1vw, 1.375rem);
-  font-weight: 700;
+  font-weight: 600;
+  font-family: var(--font-display);
   color: var(--color-accent-900);
 }
 
@@ -930,7 +980,7 @@ model-viewer::part(default-ar-button) {
   .landmark-name { 
     background: var(--color-bg);
     border-radius: var(--radius-pill);
-    padding: var(--space-2);
+    padding: var(--space-2) var(--space-4);
     width: fit-content;
    }
 
