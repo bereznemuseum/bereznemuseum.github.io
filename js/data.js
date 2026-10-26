@@ -94,8 +94,7 @@ const LANDMARKS_DATA = [
       poster: 'assets/images/data/kostel-sviatoho-kaetana/kostel-sviatoho-kaetana-digital-reconstruction-poster.webp',
     },
     galleryNow: [
-      { src: '/', credit: 'Стенд з QR-кодом на місці' },
-      { src: '/', credit: 'Фото локації' },
+      { src: 'assets/images/data/kostel-sviatoho-kaetana/now/kostel-sviatoho-kaetana-now1.webp', credit: 'Стенд з QR-кодом на місці' },
     ],
     galleryReconstruction: [
       { src: 'assets/images/data/kostel-sviatoho-kaetana/reconstruction/kostel-sviatoho-kaetana-digital-reconstruction-isometric.webp', credit: 'Цифрова реконструкція, 2026' },
@@ -114,7 +113,7 @@ const LANDMARKS_DATA = [
   // Головна єврейська синагога
   {
     id: 'holovna-yevreiska-synahoha',
-    name: 'Головна єврейська синагога',
+    name: 'Велика синагога',
     type: 'Синагога',
     description:
       '**Головна іудейська святиня** була збудована в **1910 році**. ' +
@@ -139,8 +138,7 @@ const LANDMARKS_DATA = [
       poster: 'assets/images/data/holovna-yevreiska-synahoha/holovna-yevreiska-synahoha-digital-reconstruction-poster.webp',
     },
     galleryNow: [
-      { src: '/', credit: 'Стенд з QR-кодом на місці' },
-      { src: '/', credit: 'Фото локації' },
+      { src: 'assets/images/data/holovna-yevreiska-synahoha/now/holovna-yevreiska-synahoha-now1.webp', credit: 'Стенд з QR-кодом на місці' },
     ],
     galleryReconstruction: [
       { src: 'assets/images/data/holovna-yevreiska-synahoha/reconstruction/holovna-yevreiska-synahoha-digital-reconstruction-isometric.webp', credit: 'Цифрова реконструкція, 2026' },
@@ -176,8 +174,7 @@ const LANDMARKS_DATA = [
       poster: 'assets/images/data/pivdenni-bramni-vorota/pivdenni-bramni-vorota-digital-reconstruction-poster.webp',
     },
     galleryNow: [
-      { src: '/', credit: 'Стенд з QR-кодом на місці' },
-      { src: '/', credit: 'Фото локації' },
+      { src: 'assets/images/data/pivdenni-bramni-vorota/now/pivdenni-bramni-vorota-now1.webp', credit: 'Стенд з QR-кодом на місці' },
     ],
     galleryReconstruction: [
       { src: 'assets/images/data/pivdenni-bramni-vorota/reconstruction/pivdenni-bramni-vorota-digital-reconstruction-isometric.webp', credit: 'Цифрова реконструкція, 2026' },
